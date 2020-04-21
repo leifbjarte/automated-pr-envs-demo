@@ -21,11 +21,16 @@ stages:
   jobs:
   - job: BuildApi
     steps:
+    - task: DotNetCoreCLI@2
+      inputs:
+        command: 'restore'
+        projects: 'src/FagKaffe.Api/*.csproj'
+        feedsToUse: 'select'
 
     - task: DotNetCoreCLI@2
       inputs:
         command: 'build'
-        projects: '**/*.csproj'
+        projects: 'src/FagKaffe.Api/*.csproj'
 
     - task: DotNetCoreCLI@2
       inputs:
@@ -146,6 +151,7 @@ stages:
                 appType: functionAppLinux
                 appName: $(functionServiceName)
                 package: $(functionsPackage)
+
             
             - task: AzureAppServiceManage@0
               displayName: 'Restart function app'
