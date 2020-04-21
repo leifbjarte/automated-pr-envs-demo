@@ -37,7 +37,7 @@ stages:
               ScriptType: 'InlineScript'
               Inline: |
                 $prNumber = "$($env:PRNUMBER)"
-                $templateFile = $($env:INFRATEMPLATEFILE)
+                $templateFile = $($env:TEMPLATEFILE)
                 $resourceGroup = "fagkaffe-infra"
                 
                 Write-Host "Using pr number: $prNumber"
