@@ -1,19 +1,32 @@
-# Starter pipeline
-# Start with a minimal pipeline that you can customize to build and deploy your code.
-# Add steps that build, run tests, deploy, and more:
-# https://aka.ms/yaml
+trigger: 
+    branches:
+      include:
+      - master
+    paths:
+      include:
+      - src/arm-templates/infrastructure.json
+  
+pr: none
+  
+variables:
+  resourceGroup: fagkaffe-infra
 
-trigger:
-- master
-
-pool:
-  vmImage: 'ubuntu-latest'
-
-steps:
-- script: echo Hello, world!
-  displayName: 'Run a one-line script'
-
-- script: |
-    echo Add other tasks to build, test, and deploy your project.
-    echo See https://aka.ms/yaml
-  displayName: 'Run a multi-line script'
+stages:
+- stage: DeployInfra
+  displayName: Deploy Azure Infrastructure
+  jobs:
+  - job: DeployInfra
+    pool: 
+      vmImage: 'windows-latest'
+    
+    steps: 
+    - task: AzurePowerShell@4
+      displayName: 'Deploy ARM template'
+      inputs:
+        azureSubscription: 'Visual Studio Professional(8ba210c5-c187-44bb-9d0b-858282bb4487)'
+        ScriptType: 'InlineScript'
+        Inline: |
+          New-AzResourceGroupDeployment -Mode Incremental -Name "fagkaffe-infra" -ResourceGroupName $(resourceGroup) -TemplateFile "$(Build.SourcesDirectory)/arm-templates/infrastructure.json"
+          
+        FailOnStandardError: true
+        azurePowerShellVersion: 'LatestVersion'
