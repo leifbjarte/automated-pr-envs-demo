@@ -13,11 +13,42 @@ variables:
   apiPackage: '$(Pipeline.Workspace)/drop/FagKaffe.Api.zip'
   prNumber: $(system.pullRequest.pullRequestNumber)
 
-steps:
-- script: echo Hello, world!
-  displayName: 'Run a one-line script'
+stages:
+- stage: DeployARM
+  displayName: 'Deploy ARM template'
+  dependsOn: []
+  variables:
+    templateFile: $(Build.SourcesDirectory)/arm-templates/pr-specific-resources.json
 
-- script: |
-    echo Add other tasks to build, test, and deploy your project.
-    echo See https://aka.ms/yaml
-  displayName: 'Run a multi-line script'
+  jobs:
+  - deployment: Deploy
+    displayName: 'Deploy ARM'
+    environment: fagkaffe-pr
+    strategy:
+      runOnce:
+        deploy:
+          steps:
+          - checkout: self
+
+          - task: AzurePowerShell@4
+            displayName: 'Deploy ARM infrastructure template'
+            inputs:
+              azureSubscription: 'Visual Studio Professional(8ba210c5-c187-44bb-9d0b-858282bb4487)'
+              ScriptType: 'InlineScript'
+              Inline: |
+                $prNumber = "$($env:PRNUMBER)"
+                $templateFile = $($env:TEMPLATEFILE)
+                $resourceGroup = "fagkaffe-infra"
+                
+                Write-Host "Using pr number: $prNumber"
+                Write-Host "Using resource group: $resourceGroup"
+                Write-Host "Using template file: $templateFile"
+                
+                New-AzResourceGroupDeployment -Mode Incremental `
+                  -Name "fagkaffe-infra-$prNumber" `
+                  -ResourceGroupName $resourceGroup `
+                  -TemplateFile $templateFile `
+                  -pr-number $prNumber
+                
+              FailOnStandardError: true
+              azurePowerShellVersion: 'LatestVersion'
