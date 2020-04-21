@@ -12,7 +12,7 @@
     },
     "variables": {
         "asp-name": "asp-auto-pr-env",
-        "storageAccountName": "sa-auto-pr-env",
+        "storageAccountName": "saautoprenv",
         "location": "[resourceGroup().location]",
         "api-name": "[concat('fagkaffe-api-', parameters('pr-number'))]",
         "func-name": "[concat('fagkaffe-func-', parameters('pr-number'))]",
