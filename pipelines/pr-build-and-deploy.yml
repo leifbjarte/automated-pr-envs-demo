@@ -18,7 +18,7 @@ stages:
   displayName: 'Deploy ARM template'
   dependsOn: []
   variables:
-    templateFile: $(Build.SourcesDirectory)/src/arm-templates/pr-specific-resources.json
+    templateFile: $(Build.SourcesDirectory)/arm-templates/pr-specific-resources.json
 
   jobs:
   - deployment: Deploy
