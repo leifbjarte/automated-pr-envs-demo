@@ -40,7 +40,6 @@
                     "webSocketsEnabled": false,
                     "appSettings": [
                     ],
-                    "alwaysOn": true,
                     "cors": {
                         "allowedOrigins": [
                             "*"
@@ -72,8 +71,7 @@
                     "phpVersion": "off",
                     "ftpsState": "FtpsOnly",
                     "minTlsVersion": "1.2",
-                    "webSocketsEnabled": false,
-                    "alwaysOn": true
+                    "webSocketsEnabled": false
                 },
                 "serverFarmId": "[variables('id-serverfarm')]",
                 "hostingEnvironment": "[variables('asp-name')]",
