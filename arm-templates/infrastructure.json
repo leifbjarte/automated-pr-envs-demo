@@ -5,7 +5,7 @@
     },
     "variables": {
         "location": "[resourceGroup().location]",
-        "storageAccountName": "sa-auto-pr-env",
+        "storageAccountName": "saautoprenv",
         "asp-name": "asp-auto-pr-env"
     },
     "resources": [
