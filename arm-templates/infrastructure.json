@@ -1,0 +1,32 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+    },
+    "variables": {
+        "location": "[resourceGroup().location]",
+        "asp-name": "asp-auto-pr-env"
+    },
+    "resources": [
+        {
+            "apiVersion": "2018-02-01",
+            "name": "[variables('asp-name')]",
+            "type": "Microsoft.Web/serverfarms",
+            "location": "[variables('location')]",
+            "kind": "linux",
+            "tags": {
+                "application": "query",
+                "environment-type": "test"
+            },
+            "properties": {
+                "name": "[variables('asp-name')]",
+                "reserved": true,
+                "hostingEnvironment": ""
+            },
+            "sku": {
+                "Tier": "Free",
+                "Name": "F1"
+            }
+        }
+    ]
+}
