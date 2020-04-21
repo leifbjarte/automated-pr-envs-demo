@@ -38,8 +38,6 @@ stages:
               Inline: |
                 $prNumber = "$($env:PRNUMBER)"
                 $templateFile = $($env:INFRATEMPLATEFILE)
-                
-                if ($envResourceGroup -eq $null) { throw "Cannot locate resource group for environment '$environment'" }
                 $resourceGroup = "fagkaffe-infra"
                 
                 Write-Host "Using pr number: $prNumber"
