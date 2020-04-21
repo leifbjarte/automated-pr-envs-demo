@@ -155,7 +155,7 @@ stages:
                 Action: 'Restart Azure App Service'
 
 - stage: DeployAPI
-  displayName: 'Deploy API and database changes'
+  displayName: 'Deploy API'
   dependsOn:
   - BuildApi
   - DeployARM
@@ -173,4 +173,4 @@ stages:
               azureSubscription: $(subscription)
               appType: webAppLinux
               appName: 'fagkaffe-api-$(prNumber)'
-              package: $(System.DefaultWorkingDirectory)/**/*.zip
+              package: $(Pipeline.Workspace)/api/*.zip
