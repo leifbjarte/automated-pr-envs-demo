@@ -17,6 +17,7 @@ variables:
 stages:
 - stage: BuildApi
   displayName: Build API
+  dependsOn: []
   jobs:
   - job: BuildApi
     steps:
@@ -40,6 +41,7 @@ stages:
 
 - stage: BuildFunction
   displayName: Build Function
+  dependsOn: []
   jobs:
   - job: Build
     pool: 
@@ -120,6 +122,7 @@ stages:
               azurePowerShellVersion: 'LatestVersion'
               
 - stage: DeployFunction
+
   displayName: 'Deploy function app'
   dependsOn: 
   - DeployARM
@@ -150,3 +153,25 @@ stages:
                 azureSubscription: $(subscription)
                 WebAppName: $(functionServiceName)
                 Action: 'Restart Azure App Service'
+
+- stage: DeployAPI
+  displayName: 'Deploy API and database changes'
+  dependsOn:
+  - BuildApi
+  - DeployARM
+  condition: succeeded()
+  jobs:
+  - deployment: Deploy
+    pool: Private Docker
+    displayName: 'Deploy api'
+    environment: query-pr
+    strategy:
+      runOnce:
+        deploy:
+          steps:
+          - task: AzureWebApp@1
+            inputs:
+              azureSubscription: $(subscription)
+              appType: webAppLinux
+              appName: 'fagkaffe-api-$(prNumber)'
+              package: $(System.DefaultWorkingDirectory)/**/*.zip
