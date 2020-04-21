@@ -14,6 +14,28 @@ variables:
   prNumber: $(system.pullRequest.pullRequestNumber)
 
 stages:
+- stage: BuildApi
+  jobs:
+  - job: BuildApi
+    steps:
+
+    - task: DotNetCoreCLI@2
+      inputs:
+        command: 'build'
+        projects: '**/*.csproj'
+
+    - task: DotNetCoreCLI@2
+      inputs:
+        command: publish
+        publishWebProjects: True
+        arguments: '--configuration $(BuildConfiguration) --output $(Build.ArtifactStagingDirectory)'
+        zipAfterPublish: True
+
+    - task: PublishBuildArtifacts@1
+      inputs:
+        pathtoPublish: '$(Build.ArtifactStagingDirectory)' 
+        artifactName: 'api'
+
 - stage: DeployARM
   displayName: 'Deploy ARM template'
   dependsOn: []
