@@ -5,7 +5,7 @@
     },
     "variables": {
         "location": "[resourceGroup().location]",
-        "storageAccountName": "sa-auto-pr-env",
+        "storageAccountName": "saautoprenv",
         "asp-name": "asp-auto-pr-env"
     },
     "resources": [
@@ -29,6 +29,7 @@
             "apiVersion": "2019-06-01",
             "type": "Microsoft.Storage/storageAccounts",
             "name": "[variables('storageAccountName')]",
+            "kind": "StorageV2",
             "location": "[variables('location')]",
             "sku": {
                 "name": "Standard_LRS"
