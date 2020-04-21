@@ -1,0 +1,23 @@
+trigger: none
+
+pr:
+  branches:
+    include:
+    - '*'  # must quote since "*" is a YAML reserved character; we want a string
+
+pool:
+  vmImage: 'ubuntu-latest'
+
+variables:
+  functionsPackage: '$(Pipeline.Workspace)/drop/FagKaffe.Functions.zip'
+  apiPackage: '$(Pipeline.Workspace)/drop/FagKaffe.Api.zip'
+  prNumber: $(system.pullRequest.pullRequestNumber)
+
+steps:
+- script: echo Hello, world!
+  displayName: 'Run a one-line script'
+
+- script: |
+    echo Add other tasks to build, test, and deploy your project.
+    echo See https://aka.ms/yaml
+  displayName: 'Run a multi-line script'
