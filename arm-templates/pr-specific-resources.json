@@ -12,6 +12,7 @@
     },
     "variables": {
         "asp-name": "asp-auto-pr-env",
+        "storageAccountName": "sa-auto-pr-env",
         "location": "[resourceGroup().location]",
         "api-name": "[concat('fagkaffe-api-', parameters('pr-number'))]",
         "func-name": "[concat('fagkaffe-func-', parameters('pr-number'))]",
@@ -40,7 +41,6 @@
                     "webSocketsEnabled": false,
                     "appSettings": [
                     ],
-                    "alwaysOn": true,
                     "cors": {
                         "allowedOrigins": [
                             "*"
@@ -69,11 +69,24 @@
                 "name": "[variables('func-name')]",
                 "httpsOnly": true,
                 "siteConfig": {
+                    "appSettings": [
+                        {
+                            "name": "FUNCTIONS_EXTENSION_VERSION",
+                            "value": "~3"
+                        },
+                        {
+                            "name": "FUNCTIONS_WORKER_RUNTIME",
+                            "value": "dotnet"
+                        },
+                        {
+                            "name": "AzureWebJobsStorage",
+                            "value": "[concat('DefaultEndpointsProtocol=https;AccountName=',variables('storageAccountName'),';AccountKey=',listKeys(resourceId('Microsoft.Storage/storageAccounts', variables('storageAccountName')), '2019-06-01').keys[0].value,';EndpointSuffix=','core.windows.net')]"
+                        }
+                    ],
                     "phpVersion": "off",
                     "ftpsState": "FtpsOnly",
                     "minTlsVersion": "1.2",
-                    "webSocketsEnabled": false,
-                    "alwaysOn": true
+                    "webSocketsEnabled": false
                 },
                 "serverFarmId": "[variables('id-serverfarm')]",
                 "hostingEnvironment": "[variables('asp-name')]",

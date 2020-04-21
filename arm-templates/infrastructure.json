@@ -5,6 +5,7 @@
     },
     "variables": {
         "location": "[resourceGroup().location]",
+        "storageAccountName": "sa-auto-pr-env",
         "asp-name": "asp-auto-pr-env"
     },
     "resources": [
@@ -14,10 +15,6 @@
             "type": "Microsoft.Web/serverfarms",
             "location": "[variables('location')]",
             "kind": "linux",
-            "tags": {
-                "application": "query",
-                "environment-type": "test"
-            },
             "properties": {
                 "name": "[variables('asp-name')]",
                 "reserved": true,
@@ -26,6 +23,18 @@
             "sku": {
                 "Tier": "Free",
                 "Name": "F1"
+            }
+        },
+        {
+            "apiVersion": "2019-06-01",
+            "type": "Microsoft.Storage/storageAccounts",
+            "name": "[variables('storageAccountName')]",
+            "location": "[variables('location')]",
+            "sku": {
+                "name": "Standard_LRS"
+            },
+            "properties": {
+                "supportsHttpsTrafficOnly": true
             }
         }
     ]
