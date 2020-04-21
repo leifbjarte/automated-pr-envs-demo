@@ -35,7 +35,7 @@ namespace FagKaffe.Api.Controllers
             })
             .ToArray();
 
-            //trigger build 2
+            //trigger build 3
         }
     }
 }
