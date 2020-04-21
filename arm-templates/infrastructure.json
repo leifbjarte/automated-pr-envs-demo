@@ -14,10 +14,6 @@
             "type": "Microsoft.Web/serverfarms",
             "location": "[variables('location')]",
             "kind": "linux",
-            "tags": {
-                "application": "query",
-                "environment-type": "test"
-            },
             "properties": {
                 "name": "[variables('asp-name')]",
                 "reserved": true,
