@@ -162,7 +162,6 @@ stages:
   condition: succeeded()
   jobs:
   - deployment: Deploy
-    pool: Private Docker
     displayName: 'Deploy api'
     environment: query-pr
     strategy:
