@@ -1,0 +1,84 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "pr-number": {
+            "type": "string"
+        },
+        "rg-infra-name": {
+            "type": "string",
+            "defaultValue": "fagkaffe-infra"
+        }
+    },
+    "variables": {
+        "asp-name": "asp-auto-pr-env",
+        "location": "[resourceGroup().location]",
+        "api-name": "[concat('fagkaffe-api-', parameters('pr-number'))]",
+        "func-name": "[concat('fagkaffe-func-', parameters('pr-number'))]",
+        "id-rg-infra": "[concat('/subscriptions/', subscription().subscriptionId,'/resourcegroups/', parameters('rg-infra-name'))]",
+        "id-serverfarm": "[concat(variables('id-rg-infra'), '/providers/Microsoft.Web/serverfarms/', variables('asp-name'))]"
+    },
+    "resources": [
+        /* API SERVICE */
+        {
+            "apiVersion": "2018-11-01",
+            "name": "[variables('api-name')]",
+            "type": "Microsoft.Web/sites",
+            "location": "[variables('location')]",
+            "identity": {
+                "type": "SystemAssigned"
+            },
+            "dependsOn": [
+            ],
+            "properties": {
+                "name": "[variables('api-name')]",
+                "httpsOnly": true,
+                "siteConfig": {
+                    "phpVersion": "off",
+                    "ftpsState": "FtpsOnly",
+                    "minTlsVersion": "1.2",
+                    "webSocketsEnabled": false,
+                    "appSettings": [
+                    ],
+                    "alwaysOn": true,
+                    "cors": {
+                        "allowedOrigins": [
+                            "*"
+                        ],
+                        "supportCredentials": false
+                    }
+                },
+                "serverFarmId": "[variables('id-serverfarm')]",
+                "clientAffinityEnabled": false
+            }
+        },
+
+        /* FUNCTION APP*/
+        {
+            "apiVersion": "2018-11-01",
+            "name": "[variables('func-name')]",
+            "type": "Microsoft.Web/sites",
+            "kind": "functionapp,linux",
+            "location": "[variables('location')]",
+            "identity": {
+                "type": "SystemAssigned"
+            },
+            "dependsOn": [
+            ],
+            "properties": {
+                "name": "[variables('func-name')]",
+                "httpsOnly": true,
+                "siteConfig": {
+                    "phpVersion": "off",
+                    "ftpsState": "FtpsOnly",
+                    "minTlsVersion": "1.2",
+                    "webSocketsEnabled": false,
+                    "alwaysOn": true
+                },
+                "serverFarmId": "[variables('id-serverfarm')]",
+                "hostingEnvironment": "[variables('asp-name')]",
+                "clientAffinityEnabled": false
+            }
+        }
+    ]
+}
