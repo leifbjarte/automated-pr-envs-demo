@@ -9,6 +9,7 @@ pool:
   vmImage: 'ubuntu-latest'
 
 variables:
+  subscription: 'Visual Studio Professional(8ba210c5-c187-44bb-9d0b-858282bb4487)'
   functionsPackage: '$(Pipeline.Workspace)/functions/FagKaffe.Functions.zip'
   apiPackage: '$(Pipeline.Workspace)/api/FagKaffe.Api.zip'
   prNumber: $(system.pullRequest.pullRequestNumber)
@@ -75,7 +76,9 @@ stages:
 
     - task: PublishBuildArtifacts@1
       displayName: 'Publish Artifact'
-      name: 'functions'
+      inputs:
+        pathtoPublish: '$(Build.ArtifactStagingDirectory)' 
+        artifactName: 'functions'
 
 - stage: DeployARM
   displayName: 'Deploy ARM template'
@@ -96,7 +99,7 @@ stages:
           - task: AzurePowerShell@4
             displayName: 'Deploy ARM infrastructure template'
             inputs:
-              azureSubscription: 'Visual Studio Professional(8ba210c5-c187-44bb-9d0b-858282bb4487)'
+              azureSubscription: $(subscription)
               ScriptType: 'InlineScript'
               Inline: |
                 $prNumber = "$($env:PRNUMBER)"
@@ -115,3 +118,35 @@ stages:
                 
               FailOnStandardError: true
               azurePowerShellVersion: 'LatestVersion'
+              
+- stage: DeployFunction
+  displayName: 'Deploy function app'
+  dependsOn: 
+  - DeployARM
+  - BuildFunction
+  condition: succeeded()
+  
+  variables:
+    functionServiceName: fagkaffe-func-$(prNumber)
+
+  jobs:
+  - deployment: Deploy
+    displayName: 'Deploy function job'
+    environment: fagkaffe-pr
+    strategy:
+      runOnce:
+        deploy:
+          steps:
+            - task: AzureFunctionApp@1
+              inputs:
+                azureSubscription: $(subscription)
+                appType: functionAppLinux
+                appName: $(functionServiceName)
+                package: $(functionsPackage)
+            
+            - task: AzureAppServiceManage@0
+              displayName: 'Restart function app'
+              inputs:
+                azureSubscription: $(subscription)
+                WebAppName: $(functionServiceName)
+                Action: 'Restart Azure App Service'
