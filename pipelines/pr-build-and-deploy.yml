@@ -22,7 +22,6 @@ stages:
 
   jobs:
   - deployment: Deploy
-    pool: Private Docker
     displayName: 'Deploy ARM'
     environment: fagkaffe-pr
     strategy:
