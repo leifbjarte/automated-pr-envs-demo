@@ -9,12 +9,13 @@ pool:
   vmImage: 'ubuntu-latest'
 
 variables:
-  functionsPackage: '$(Pipeline.Workspace)/drop/FagKaffe.Functions.zip'
-  apiPackage: '$(Pipeline.Workspace)/drop/FagKaffe.Api.zip'
+  functionsPackage: '$(Pipeline.Workspace)/functions/FagKaffe.Functions.zip'
+  apiPackage: '$(Pipeline.Workspace)/api/FagKaffe.Api.zip'
   prNumber: $(system.pullRequest.pullRequestNumber)
 
 stages:
 - stage: BuildApi
+  displayName: Build API
   jobs:
   - job: BuildApi
     steps:
@@ -35,6 +36,46 @@ stages:
       inputs:
         pathtoPublish: '$(Build.ArtifactStagingDirectory)' 
         artifactName: 'api'
+
+- stage: BuildFunction
+  displayName: Build Function
+  jobs:
+  - job: Build
+    pool: 
+      vmImage: 'windows-latest'
+    variables:
+      projectPath: 'src/FagKaffe.Functions'
+      projectName: 'FagKaffe.Functions'
+
+    steps:
+    - task: DotNetCoreCLI@2
+      displayName: 'dotnet restore'
+      inputs:
+        command: restore
+        projects: '$(projectPath)/$(projectName).csproj'
+
+    - task: MSBuild@1
+      displayName: 'Build function app'
+      inputs:
+        solution: '$(projectPath)/*.csproj'
+        configuration: 'Release'
+        msbuildArguments: '/t:Publish /p:PublishDir="$(Build.BinariesDirectory)\\"'
+
+    - task: ArchiveFiles@2
+      displayName: 'Compress published function to zip'
+      inputs:
+        includeRootFolder: false
+        archiveFile: '$(Build.ArtifactStagingDirectory)/$(projectName).zip'
+
+    - task: DeleteFiles@1
+      displayName: 'Delete files from $(Build.BinariesDirectory)'
+      inputs:
+        SourceFolder: '$(Build.BinariesDirectory)'
+        Contents: '*'
+
+    - task: PublishBuildArtifacts@1
+      displayName: 'Publish Artifact'
+      name: 'functions'
 
 - stage: DeployARM
   displayName: 'Deploy ARM template'
