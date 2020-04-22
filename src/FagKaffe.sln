@@ -5,9 +5,7 @@ VisualStudioVersion = 16.0.30002.166
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FagKaffe.Functions", "FagKaffe.Functions\FagKaffe.Functions.csproj", "{FDDB81A8-747D-4B44-8036-DBD64391F60A}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FagKaffe.Api", "FagKaffe.Api\FagKaffe.Api.csproj", "{406994A8-58E9-4836-B7F7-713907062A50}"
-EndProject
-Project("{151D2E53-A2C4-4D7D-83FE-D05416EBD58E}") = "FagKaffe.Resources", "FagKaffe.Resources\FagKaffe.Resources.deployproj", "{A9725DAB-8711-463C-AA33-64BEADF4B41B}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FagKaffe.Api", "FagKaffe.Api\FagKaffe.Api.csproj", "{406994A8-58E9-4836-B7F7-713907062A50}"
 EndProject
 Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "FagKaffe.Logic", "FagKaffe.Logic\FagKaffe.Logic.shproj", "{6C857553-AECC-4E68-B9CD-9D3DDE54FF4F}"
 EndProject
@@ -28,10 +26,6 @@ Global
 		{406994A8-58E9-4836-B7F7-713907062A50}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{406994A8-58E9-4836-B7F7-713907062A50}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{406994A8-58E9-4836-B7F7-713907062A50}.Release|Any CPU.Build.0 = Release|Any CPU
-		{A9725DAB-8711-463C-AA33-64BEADF4B41B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{A9725DAB-8711-463C-AA33-64BEADF4B41B}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{A9725DAB-8711-463C-AA33-64BEADF4B41B}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{A9725DAB-8711-463C-AA33-64BEADF4B41B}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
