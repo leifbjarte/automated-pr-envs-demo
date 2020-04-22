@@ -4,19 +4,16 @@
     "parameters": {
         "pr-number": {
             "type": "string"
-        },
-        "rg-infra-name": {
-            "type": "string",
-            "defaultValue": "fagkaffe-infra"
         }
     },
     "variables": {
         "asp-name": "asp-auto-pr-env",
         "storageAccountName": "saautoprenv",
+        "resourceGroup": "fagkaffe-infra",
         "location": "[resourceGroup().location]",
         "api-name": "[concat('fagkaffe-api-', parameters('pr-number'))]",
         "func-name": "[concat('fagkaffe-func-', parameters('pr-number'))]",
-        "id-rg-infra": "[concat('/subscriptions/', subscription().subscriptionId,'/resourcegroups/', parameters('rg-infra-name'))]",
+        "id-rg-infra": "[concat('/subscriptions/', subscription().subscriptionId,'/resourcegroups/', variables('resourceGroup'))]",
         "id-serverfarm": "[concat(variables('id-rg-infra'), '/providers/Microsoft.Web/serverfarms/', variables('asp-name'))]"
     },
     "resources": [
@@ -39,6 +36,7 @@
                     "ftpsState": "FtpsOnly",
                     "minTlsVersion": "1.2",
                     "webSocketsEnabled": false,
+                    "alwaysOn": true,
                     "appSettings": [
                     ],
                     "cors": {
@@ -86,7 +84,8 @@
                     "phpVersion": "off",
                     "ftpsState": "FtpsOnly",
                     "minTlsVersion": "1.2",
-                    "webSocketsEnabled": false
+                    "webSocketsEnabled": false,
+                    "alwaysOn": true
                 },
                 "serverFarmId": "[variables('id-serverfarm')]",
                 "hostingEnvironment": "[variables('asp-name')]",
